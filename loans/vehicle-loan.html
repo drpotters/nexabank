@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexaBank Auto Loan</title>
+    <link rel="stylesheet" href="css/loans.css" />
+  </head>
+  <body>
+    <header class="loan-header">
+      <div class="container nav">
+        <a class="brand" href="index.html">Nexa<span>Bank</span> Loans</a>
+        <nav class="nav-links">
+          <a href="index.html">Loan Hub</a>
+          <a href="home-loan.html">Home Loan</a>
+          <a class="active" href="vehicle-loan.html">Auto Loan</a>
+          <a href="personal-loan.html">Personal Loan</a>
+          <a href="../services.html">Back to Services</a>
+          <a class="btn btn-accent" href="../login.html">Apply Now</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero hero-auto">
+      <div class="container hero-grid">
+        <div>
+          <h1>Drive your next car with confidence</h1>
+          <p>New, used, refinance, and EV-focused financing built around your budget.</p>
+          <div class="trust-badges">
+            <div class="pill">New Car: 4.99%</div>
+            <div class="pill">Used Car: 5.79%</div>
+            <div class="pill">Refinance: 5.49%</div>
+          </div>
+        </div>
+        <div class="stat-cards">
+          <div class="stat"><strong>$120k</strong><br />max amount</div>
+          <div class="stat"><strong>84 mo</strong><br />max term</div>
+          <div class="stat"><strong>0.25%</strong><br />EV discount</div>
+          <div class="stat"><strong>Same day</strong><br />decisioning</div>
+        </div>
+      </div>
+    </section>
+
+    <main class="container section loan-layout">
+      <section>
+        <article class="card">
+          <h2>What is an auto loan?</h2>
+          <p>An auto loan finances a vehicle purchase where the vehicle generally acts as collateral. Your monthly payment includes principal and interest across the selected term.</p>
+        </article>
+
+        <article class="card">
+          <h2>Loan Product Types</h2>
+          <div class="grid">
+            <div class="spec"><strong>New Car</strong><br />APR from 4.99%, 36-84 months</div>
+            <div class="spec"><strong>Used Car</strong><br />APR from 5.79%, 24-72 months</div>
+            <div class="spec"><strong>Refinance</strong><br />APR from 5.49%, lower current payment</div>
+            <div class="spec"><strong>EV/Hybrid</strong><br />APR discount 0.25% with autopay</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>APR Factor Breakdown</h2>
+          <div class="spec-grid">
+            <div class="spec"><strong>Credit Score</strong><br />Largest pricing driver</div>
+            <div class="spec"><strong>Loan Term</strong><br />Longer term may increase APR</div>
+            <div class="spec"><strong>Vehicle Age</strong><br />Older cars carry higher risk</div>
+            <div class="spec"><strong>LTV Ratio</strong><br />Higher loan-to-value can raise APR</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Credit Score Rate Tiers</h2>
+          <div class="compare-table">
+            <table>
+              <thead><tr><th>Tier</th><th>Score</th><th>APR Range</th></tr></thead>
+              <tbody>
+                <tr><td>Excellent</td><td>760+</td><td>4.99%-5.79%</td></tr>
+                <tr><td>Good</td><td>700-759</td><td>5.80%-7.10%</td></tr>
+                <tr><td>Fair</td><td>640-699</td><td>7.11%-9.99%</td></tr>
+                <tr><td>Building</td><td>580-639</td><td>10.00%-13.99%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Required Documents</h2>
+          <div class="docs-grid">
+            <div>Government ID</div>
+            <div>Proof of income</div>
+            <div>Proof of residence</div>
+            <div>Insurance details</div>
+            <div>Vehicle purchase agreement</div>
+            <div>Current loan statement (refinance)</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Application Process</h2>
+          <div class="timeline">
+            <div class="step"><strong>1. Check Rate:</strong> View personalized APR range.</div>
+            <div class="step"><strong>2. Choose Vehicle:</strong> Share dealership or seller details.</div>
+            <div class="step"><strong>3. Upload Docs:</strong> Verify income and identity.</div>
+            <div class="step"><strong>4. Sign & Drive:</strong> Final e-sign and funding release.</div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="sidebar">
+        <article class="card">
+          <h3 style="margin-top:0">Get Your Rate</h3>
+          <p>See real offers with no impact to your credit score.</p>
+          <a class="btn btn-accent" href="../login.html">Check Rate</a>
+        </article>
+
+        <article class="card">
+          <h3 style="margin-top:0">Current Auto Rates</h3>
+          <ul class="rate-list">
+            <li><span>New 36 mo</span><strong>4.99%</strong></li>
+            <li><span>New 48 mo</span><strong>5.19%</strong></li>
+            <li><span>New 60 mo</span><strong>5.39%</strong></li>
+            <li><span>New 72 mo</span><strong>5.59%</strong></li>
+            <li><span>Used 36 mo</span><strong>5.79%</strong></li>
+            <li><span>Used 60 mo</span><strong>6.25%</strong></li>
+            <li><span>Refinance 60 mo</span><strong>5.49%</strong></li>
+            <li><span>EV Discount</span><strong>-0.25%</strong></li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 style="margin-top:0">Auto Payment Calculator</h3>
+          <label for="vehiclePrice">Vehicle Price</label>
+          <input id="vehiclePrice" type="number" value="42000" />
+          <label for="vehicleDown">Down Payment</label>
+          <input id="vehicleDown" type="number" value="5000" />
+          <label for="vehicleApr">APR (%)</label>
+          <input id="vehicleApr" type="number" value="5.39" step="0.01" />
+          <label for="vehicleTerm">Term (months)</label>
+          <input id="vehicleTerm" type="number" value="60" />
+          <div class="calc-result" id="vehicleCalcOut"></div>
+        </article>
+
+        <article class="card">
+          <h3 style="margin-top:0">Explore Other Loans</h3>
+          <a href="home-loan.html">Home Loan →</a><br />
+          <a href="personal-loan.html">Personal Loan →</a>
+        </article>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div class="container">Member FDIC | Equal Housing Lender | NMLS# 1800123</div>
+    </footer>
+
+    <script>
+      function money(v) {
+        return "$" + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function calcAuto() {
+        const price = Number(document.getElementById("vehiclePrice").value) || 0;
+        const down = Number(document.getElementById("vehicleDown").value) || 0;
+        const apr = (Number(document.getElementById("vehicleApr").value) || 0) / 100 / 12;
+        const n = Number(document.getElementById("vehicleTerm").value) || 0;
+        const principal = Math.max(price - down, 0);
+
+        let monthly = 0;
+        if (apr > 0 && n > 0) {
+          monthly = (principal * apr * Math.pow(1 + apr, n)) / (Math.pow(1 + apr, n) - 1);
+        }
+        const totalCost = monthly * n;
+        const totalInterest = totalCost - principal;
+
+        document.getElementById("vehicleCalcOut").innerHTML = `
+          <strong>Monthly Payment:</strong> ${money(monthly)}<br />
+          <strong>Total Interest:</strong> ${money(totalInterest)}<br />
+          <strong>Total Cost:</strong> ${money(totalCost)}
+        `;
+      }
+
+      ["vehiclePrice", "vehicleDown", "vehicleApr", "vehicleTerm"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", calcAuto);
+      });
+      calcAuto();
+    </script>
+  </body>
+</html>

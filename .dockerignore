@@ -1,0 +1,7 @@
+.git
+.gitignore
+k8s
+README-k8s.md
+Dockerfile
+*.log
+.DS_Store

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexaBank Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-protected="true">
+    <header class="portal-header">
+      <div class="container portal-head-inner">
+        <a class="logo" href="dashboard.html">Nexa<span>Bank</span> Portal</a>
+        <div style="text-align: right">
+          <div id="welcomeUser">Hello, Customer</div>
+          <small id="lastLogin">Last login: --</small>
+        </div>
+        <button class="btn btn-accent" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <div class="container portal-layout">
+      <aside class="sidebar">
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="transfer.html">Fund Transfer</a>
+        <a href="#">Cards</a>
+        <a href="#">Investments</a>
+        <a href="#">Bill Payments</a>
+        <a href="#">Alerts</a>
+        <a href="#">Settings</a>
+        <a href="login.html" id="sidebarLogout">Logout</a>
+      </aside>
+
+      <main>
+        <section class="balances">
+          <article class="balance-card">
+            <small>Savings Account • 1090 2231</small>
+            <h3>$24,530.55</h3>
+            <div class="hero-ctas">
+              <a class="btn btn-ghost" href="transfer.html">Transfer</a>
+              <a class="btn btn-ghost" href="transactions.html">Statement</a>
+            </div>
+          </article>
+          <article class="balance-card">
+            <small>Current Account • 9921 6720</small>
+            <h3>$8,940.20</h3>
+            <div class="hero-ctas">
+              <a class="btn btn-ghost" href="transfer.html">Pay Vendor</a>
+              <a class="btn btn-ghost" href="transactions.html">View Ledger</a>
+            </div>
+          </article>
+          <article class="balance-card">
+            <small>Fixed Deposit • 7720 1198</small>
+            <h3>$60,000.00</h3>
+            <div class="hero-ctas">
+              <button class="btn btn-ghost" type="button">Renew</button>
+              <button class="btn btn-ghost" type="button">Premature Close</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="quick-grid">
+          <button>Fund Transfer</button>
+          <button>Mobile Recharge</button>
+          <button>Pay Bills</button>
+          <button>Open FD</button>
+          <button>Card Services</button>
+          <button>Statements</button>
+          <button>Investments</button>
+          <button>Block Card</button>
+        </section>
+
+        <section class="cols">
+          <article class="canvas-card">
+            <h3>Monthly Spending Overview</h3>
+            <canvas id="spendingChart" width="760" height="360"></canvas>
+          </article>
+          <article class="canvas-card recent-list">
+            <h3>Recent Transactions</h3>
+            <div class="item"><div><strong>Payroll Credit</strong><br /><small>May 25, 2026</small></div><span class="amount credit">+$4,800.00</span></div>
+            <div class="item"><div><strong>Electric Bill</strong><br /><small>May 24, 2026</small></div><span class="amount debit">-$142.35</span></div>
+            <div class="item"><div><strong>Grocery Mart</strong><br /><small>May 23, 2026</small></div><span class="amount debit">-$89.20</span></div>
+            <div class="item"><div><strong>Cashback Rewards</strong><br /><small>May 22, 2026</small></div><span class="amount credit">+$32.50</span></div>
+            <div class="item"><div><strong>Ride Share</strong><br /><small>May 21, 2026</small></div><span class="amount debit">-$18.00</span></div>
+          </article>
+        </section>
+
+        <section class="progress-wrap">
+          <h3 style="margin-top: 0">Spending by Category</h3>
+          <p>Shopping</p><div class="progress"><span style="width: 72%"></span></div>
+          <p>Food</p><div class="progress"><span style="width: 61%"></span></div>
+          <p>Utilities</p><div class="progress"><span style="width: 48%"></span></div>
+          <p>Travel</p><div class="progress"><span style="width: 35%"></span></div>
+          <p>Healthcare</p><div class="progress"><span style="width: 42%"></span></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

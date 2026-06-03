@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexaBank Fund Transfer</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-protected="true">
+    <header class="portal-header">
+      <div class="container portal-head-inner">
+        <a class="logo" href="dashboard.html">Nexa<span>Bank</span> Portal</a>
+        <div id="welcomeUser">Hello, Customer</div>
+        <button class="btn btn-accent" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main class="container" style="padding: 24px 0 40px">
+      <h1 style="margin-top: 0">Fund Transfer</h1>
+      <div class="transfer-layout">
+        <section class="card">
+          <div class="tab-switch" id="transferTabs">
+            <button class="transfer-tab active" data-mode="NEFT" type="button">NEFT</button>
+            <button class="transfer-tab" data-mode="IMPS" type="button">IMPS</button>
+            <button class="transfer-tab" data-mode="UPI" type="button">UPI</button>
+            <button class="transfer-tab" data-mode="OWN" type="button">Own Account</button>
+          </div>
+
+          <form id="transferForm" novalidate>
+            <div class="form-group">
+              <label for="fromAccount">From Account</label>
+              <select id="fromAccount" name="fromAccount">
+                <option value="">Select account</option>
+                <option>Savings • 1090 2231</option>
+                <option>Current • 9921 6720</option>
+              </select>
+              <div class="error-msg" data-error-for="fromAccount"></div>
+            </div>
+
+            <div id="bankModeFields">
+              <div class="form-group">
+                <label for="beneficiaryName">Beneficiary Name</label>
+                <input class="input" id="beneficiaryName" name="beneficiaryName" />
+                <div class="error-msg" data-error-for="beneficiaryName"></div>
+              </div>
+              <div class="inline">
+                <div class="form-group">
+                  <label for="accountNumber">Account Number</label>
+                  <input class="input" id="accountNumber" name="accountNumber" />
+                  <div class="error-msg" data-error-for="accountNumber"></div>
+                </div>
+                <div class="form-group">
+                  <label for="confirmAccountNumber">Confirm Account Number</label>
+                  <input class="input" id="confirmAccountNumber" name="confirmAccountNumber" />
+                  <div class="error-msg" data-error-for="confirmAccountNumber"></div>
+                </div>
+              </div>
+
+              <div class="inline">
+                <div class="form-group">
+                  <label for="ifsc">IFSC Code</label>
+                  <div class="inline" style="gap: 6px">
+                    <input class="input" id="ifsc" name="ifsc" placeholder="NEXA0001234" />
+                    <button class="btn btn-ghost" style="white-space: nowrap" id="verifyIfsc" type="button">Verify IFSC</button>
+                  </div>
+                  <div class="error-msg" data-error-for="ifsc"></div>
+                </div>
+                <div class="form-group">
+                  <label for="bankName">Bank Name</label>
+                  <input class="input" id="bankName" name="bankName" readonly />
+                </div>
+              </div>
+            </div>
+
+            <div id="upiModeFields" style="display: none">
+              <div class="form-group">
+                <label for="upiId">UPI ID</label>
+                <input class="input" id="upiId" name="upiId" placeholder="name@bank" />
+                <div class="error-msg" data-error-for="upiId"></div>
+              </div>
+              <div class="form-group">
+                <label for="upiBeneficiary">Beneficiary Name</label>
+                <input class="input" id="upiBeneficiary" name="upiBeneficiary" />
+                <div class="error-msg" data-error-for="upiBeneficiary"></div>
+              </div>
+            </div>
+
+            <div class="inline">
+              <div class="form-group">
+                <label for="amount">Amount (USD)</label>
+                <input class="input" id="amount" name="amount" type="number" min="1" step="0.01" />
+                <div class="error-msg" data-error-for="amount"></div>
+              </div>
+              <div class="form-group">
+                <label for="purpose">Purpose</label>
+                <select id="purpose" name="purpose">
+                  <option value="">Select purpose</option>
+                  <option>Family Support</option>
+                  <option>Rent</option>
+                  <option>Vendor Payment</option>
+                  <option>Utilities</option>
+                </select>
+                <div class="error-msg" data-error-for="purpose"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="remarks">Remarks</label>
+              <textarea id="remarks" name="remarks" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="authCode">Transaction PIN / OTP</label>
+              <div class="input-row">
+                <input class="input" id="authCode" name="authCode" type="password" />
+                <button type="button" class="inline-btn" id="togglePin">Show</button>
+              </div>
+              <div class="error-msg" data-error-for="authCode"></div>
+            </div>
+
+            <div class="notice" style="margin-bottom: 14px">Verify beneficiary details carefully. Transfers submitted cannot be reversed automatically.</div>
+            <button class="btn btn-primary" id="submitTransfer" style="width: 100%" type="submit">Transfer Funds</button>
+          </form>
+        </section>
+
+        <aside class="info-panel">
+          <article class="card">
+            <h3 style="margin-top: 0">Transfer Limits</h3>
+            <p>NEFT: $100,000/day</p>
+            <p>IMPS: $10,000/txn</p>
+            <p>UPI: $2,500/day</p>
+          </article>
+          <article class="card">
+            <h3 style="margin-top: 0">Timings</h3>
+            <p>NEFT: 24x7 (batch settlement)</p>
+            <p>IMPS/UPI: Instant 24x7</p>
+            <p>Own Account: Immediate posting</p>
+          </article>
+          <article class="card">
+            <h3 style="margin-top: 0">Saved Beneficiaries</h3>
+            <div class="bene" data-bene='{"name":"Olivia Carter","account":"556677889900","ifsc":"NEXA0001001"}'>
+              Olivia Carter<br /><small>556677889900 • NEXA0001001</small>
+            </div>
+            <div class="bene" data-bene='{"name":"Skyline Rentals","account":"443322110099","ifsc":"CITI0002020"}'>
+              Skyline Rentals<br /><small>443322110099 • CITI0002020</small>
+            </div>
+            <div class="bene" data-bene='{"name":"Apex Supplies","account":"998877665544","ifsc":"WFCX0004545"}'>
+              Apex Supplies<br /><small>998877665544 • WFCX0004545</small>
+            </div>
+          </article>
+        </aside>
+      </div>
+    </main>
+
+    <div class="overlay" id="successOverlay">
+      <div class="overlay-card">
+        <div class="checkmark">✓</div>
+        <h2 style="text-align: center">Transfer Successful</h2>
+        <div id="successDetails"></div>
+        <div class="hero-ctas" style="justify-content: center; margin-top: 14px">
+          <a class="btn btn-primary" href="dashboard.html">Go to Dashboard</a>
+          <button class="btn btn-ghost" id="newTransferBtn" type="button">New Transfer</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/transfer.js"></script>
+  </body>
+</html>

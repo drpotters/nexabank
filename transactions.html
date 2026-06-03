@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexaBank Transactions</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-protected="true">
+    <header class="portal-header">
+      <div class="container portal-head-inner">
+        <a class="logo" href="dashboard.html">Nexa<span>Bank</span> Portal</a>
+        <div id="welcomeUser">Hello, Customer</div>
+        <button class="btn btn-accent" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main class="container" style="padding: 24px 0 40px">
+      <h1 style="margin-top: 0">Transaction History</h1>
+      <div class="filter-bar">
+        <select id="accountFilter">
+          <option value="all">All Accounts</option>
+          <option value="savings">Savings Account</option>
+          <option value="current">Current Account</option>
+        </select>
+        <input type="date" id="fromDate" />
+        <input type="date" id="toDate" />
+        <select id="typeFilter">
+          <option value="all">All Types</option>
+          <option value="credit">Credit</option>
+          <option value="debit">Debit</option>
+        </select>
+        <button class="btn btn-primary" id="searchBtn" type="button">Search</button>
+      </div>
+
+      <div class="summary-cards" id="summaryCards"></div>
+
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 10px">
+        <button class="btn btn-ghost" id="downloadPdf" type="button">Download PDF</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transaction ID</th>
+              <th>Description</th>
+              <th>Mode</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Running Balance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="txnBody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span id="rowCount">0 rows</span>
+          <div class="hero-ctas" style="gap: 8px">
+            <button class="btn btn-ghost" type="button">Prev</button>
+            <button class="btn btn-ghost" type="button">1</button>
+            <button class="btn btn-ghost" type="button">2</button>
+            <button class="btn btn-ghost" type="button">Next</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script>
+      const transactions = [
+        { date: "2026-05-25", id: "TXN001NEXA", desc: "Payroll Credit", mode: "ACH", type: "credit", amount: 4800, balance: 24530.55, status: "Success", account: "savings" },
+        { date: "2026-05-24", id: "TXN002NEXA", desc: "Electricity Bill", mode: "UPI", type: "debit", amount: 142.35, balance: 24388.2, status: "Success", account: "savings" },
+        { date: "2026-05-23", id: "TXN003NEXA", desc: "Grocery Mart", mode: "Card", type: "debit", amount: 89.2, balance: 24299.0, status: "Success", account: "savings" },
+        { date: "2026-05-22", id: "TXN004NEXA", desc: "Card Cashback", mode: "Reward", type: "credit", amount: 32.5, balance: 24331.5, status: "Success", account: "savings" },
+        { date: "2026-05-21", id: "TXN005NEXA", desc: "Ride Share", mode: "UPI", type: "debit", amount: 18, balance: 24313.5, status: "Success", account: "savings" },
+        { date: "2026-05-20", id: "TXN006NEXA", desc: "Dining", mode: "Card", type: "debit", amount: 46.9, balance: 24266.6, status: "Pending", account: "savings" },
+        { date: "2026-05-19", id: "TXN007NEXA", desc: "Mutual Fund Dividend", mode: "NEFT", type: "credit", amount: 120.45, balance: 24387.05, status: "Success", account: "savings" },
+        { date: "2026-05-18", id: "TXN008NEXA", desc: "Internet Bill", mode: "UPI", type: "debit", amount: 78.99, balance: 24308.06, status: "Success", account: "savings" },
+        { date: "2026-05-17", id: "TXN009NEXA", desc: "Freelance Payout", mode: "IMPS", type: "credit", amount: 950, balance: 25258.06, status: "Success", account: "current" },
+        { date: "2026-05-16", id: "TXN010NEXA", desc: "Fuel Station", mode: "Card", type: "debit", amount: 62.45, balance: 25195.61, status: "Success", account: "current" },
+        { date: "2026-05-15", id: "TXN011NEXA", desc: "Rent Payment", mode: "NEFT", type: "debit", amount: 1600, balance: 23595.61, status: "Success", account: "current" },
+        { date: "2026-05-14", id: "TXN012NEXA", desc: "Tax Refund", mode: "ACH", type: "credit", amount: 420, balance: 24015.61, status: "Success", account: "current" },
+        { date: "2026-05-13", id: "TXN013NEXA", desc: "Pharmacy", mode: "UPI", type: "debit", amount: 36.8, balance: 23978.81, status: "Success", account: "current" },
+        { date: "2026-05-12", id: "TXN014NEXA", desc: "Utility Deposit", mode: "IMPS", type: "credit", amount: 250, balance: 24228.81, status: "Success", account: "current" },
+        { date: "2026-05-11", id: "TXN015NEXA", desc: "Movie Tickets", mode: "Card", type: "debit", amount: 29.99, balance: 24198.82, status: "Pending", account: "current" },
+        { date: "2026-05-10", id: "TXN016NEXA", desc: "Salary Advance Reversal", mode: "ACH", type: "credit", amount: 300, balance: 24498.82, status: "Success", account: "current" },
+        { date: "2026-05-09", id: "TXN017NEXA", desc: "Cloud Subscription", mode: "Card", type: "debit", amount: 14.99, balance: 24483.83, status: "Success", account: "current" },
+        { date: "2026-05-08", id: "TXN018NEXA", desc: "Bookstore", mode: "UPI", type: "debit", amount: 22.15, balance: 24461.68, status: "Success", account: "current" }
+      ];
+
+      const txnBody = document.getElementById("txnBody");
+      const rowCount = document.getElementById("rowCount");
+      const typeFilter = document.getElementById("typeFilter");
+      const accountFilter = document.getElementById("accountFilter");
+      const summaryCards = document.getElementById("summaryCards");
+
+      function money(v) {
+        return "$" + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function render(rows) {
+        txnBody.innerHTML = rows
+          .map((t) => `
+            <tr class="${t.type === "credit" ? "credit-row" : ""}">
+              <td>${t.date}</td>
+              <td class="mono">${t.id}</td>
+              <td>${t.desc}</td>
+              <td><span class="badge">${t.mode}</span></td>
+              <td style="color:#ef4444">${t.type === "debit" ? money(t.amount) : "-"}</td>
+              <td style="color:#10b981">${t.type === "credit" ? money(t.amount) : "-"}</td>
+              <td>${money(t.balance)}</td>
+              <td><span class="status ${t.status === "Success" ? "success" : "pending"}">${t.status}</span></td>
+            </tr>
+          `)
+          .join("");
+
+        const credits = rows.filter((r) => r.type === "credit").reduce((s, r) => s + r.amount, 0);
+        const debits = rows.filter((r) => r.type === "debit").reduce((s, r) => s + r.amount, 0);
+        const net = credits - debits;
+
+        summaryCards.innerHTML = `
+          <article class="card"><small>Total Credits</small><h3 style="color:#10b981;margin:6px 0">${money(credits)}</h3></article>
+          <article class="card"><small>Total Debits</small><h3 style="color:#ef4444;margin:6px 0">${money(debits)}</h3></article>
+          <article class="card"><small>Net Balance Change</small><h3 style="margin:6px 0">${money(net)}</h3></article>
+          <article class="card"><small>Total Count</small><h3 style="margin:6px 0">${rows.length}</h3></article>
+        `;
+
+        rowCount.textContent = `${rows.length} rows`;
+      }
+
+      function applyFilters() {
+        const type = typeFilter.value;
+        const acc = accountFilter.value;
+        let rows = [...transactions];
+        if (type !== "all") rows = rows.filter((t) => t.type === type);
+        if (acc !== "all") rows = rows.filter((t) => t.account === acc);
+        render(rows);
+      }
+
+      typeFilter.addEventListener("change", applyFilters);
+      accountFilter.addEventListener("change", applyFilters);
+      document.getElementById("searchBtn").addEventListener("click", applyFilters);
+      document.getElementById("downloadPdf").addEventListener("click", () => {
+        alert("PDF download simulated for demo environment.");
+      });
+
+      render(transactions);
+    </script>
+  </body>
+</html>

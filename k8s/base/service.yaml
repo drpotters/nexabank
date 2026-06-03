@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexabank
+  namespace: nexabank
+  labels:
+    app.kubernetes.io/name: nexabank
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: nexabank
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

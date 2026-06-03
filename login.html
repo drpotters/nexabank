@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexaBank Net Banking Login</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="login-page">
+      <section class="login-brand">
+        <div>
+          <a class="logo" href="index.html" style="color: #fff">Nexa<span>Bank</span></a>
+          <h1>Welcome to secure net banking</h1>
+          <p>Fast, encrypted, and trusted by millions of customers every day.</p>
+          <ul>
+            <li>256-bit encrypted sessions</li>
+            <li>Real-time fraud monitoring</li>
+            <li>2FA and device protection</li>
+            <li>24/7 support team</li>
+          </ul>
+        </div>
+        <p><a href="index.html" style="text-decoration: underline">← Back to Home</a></p>
+      </section>
+
+      <section class="login-panel">
+        <div class="login-card">
+          <h2 style="margin-top: 0">Net Banking Login</h2>
+          <div class="tabs" id="loginTabs">
+            <button type="button" class="tab-btn active" data-type="Personal">Personal</button>
+            <button type="button" class="tab-btn" data-type="Business">Business</button>
+          </div>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="customerId">Customer ID</label>
+              <input class="input" id="customerId" name="customerId" placeholder="Enter customer ID" />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-row">
+                <input class="input" type="password" id="password" name="password" placeholder="Enter password" />
+                <button type="button" class="inline-btn" id="togglePassword">Show</button>
+              </div>
+            </div>
+
+            <div class="meta-row">
+              <label style="display: flex; gap: 6px; align-items: center">
+                <input type="checkbox" id="rememberMe" /> Remember Me
+              </label>
+              <a href="#">Forgot Password?</a>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%" id="loginBtn" type="submit">Secure Login</button>
+            <button class="btn btn-ghost" style="width: 100%; margin-top: 10px" id="demoBtn" type="button">Quick Demo Login</button>
+            <p id="loginMsg" style="min-height: 20px"></p>
+          </form>
+
+          <div class="security-badge">🔒 Protected by NexaBank Shield, SSL, and adaptive risk scoring.</div>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+  </body>
+</html>
