@@ -14,8 +14,8 @@ docker push <registry>/nexabank:<tag>
 Example:
 
 ```sh
-docker build -t ghcr.io/your-user/nexabank:1.0.0 .
-docker push ghcr.io/your-user/nexabank:1.0.0
+docker build -t ghcr.io/drpotters/nexabank:1.0.0 .
+docker push ghcr.io/drpotters/nexabank:1.0.0
 ```
 
 ## 2) Deploy with Kustomize (recommended)
