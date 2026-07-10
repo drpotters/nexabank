@@ -1,0 +1,43 @@
+# NexaBank nginx server config.
+# This file is rendered by the nginxinc entrypoint via `envsubst` at container
+# startup. Only the ${VARS} listed in NGINX_ENVSUBST_FILTER (set in the
+# Dockerfile) are substituted; nginx's own $variables are left untouched.
+
+server {
+    listen       8080;
+    listen       [::]:8080;
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # ---- Workload introspection endpoints ----------------------------------
+    # These help verify Kubernetes deployments: which pod/node served the
+    # request, where the client came from, and the container's identity.
+
+    # /pod-info: details about the pod/node serving this request.
+    location = /pod-info {
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        return 200 '{"pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","pod_ip":"${POD_IP}","node_name":"${NODE_NAME}","hostname":"${HOSTNAME}","app":"${APP_NAME}","version":"${APP_VERSION}","server_time":"$time_iso8601"}\n';
+    }
+
+    # /origin-info: details about where the request came from.
+    location = /origin-info {
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        return 200 '{"client_ip":"$remote_addr","x_forwarded_for":"$http_x_forwarded_for","x_forwarded_proto":"$http_x_forwarded_proto","x_real_ip":"$http_x_real_ip","host":"$host","scheme":"$scheme","request_method":"$request_method","uri":"$request_uri","user_agent":"$http_user_agent","server_time":"$time_iso8601"}\n';
+    }
+
+    # /whoami: identity of the container/workload answering the request.
+    location = /whoami {
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        return 200 '{"hostname":"${HOSTNAME}","pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","node_name":"${NODE_NAME}","app":"${APP_NAME}","version":"${APP_VERSION}","served_by":"nginx","server_time":"$time_iso8601"}\n';
+    }
+
+    # ---- Static site --------------------------------------------------------
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

@@ -28,6 +28,29 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+          env:
+            # Downward API values surfaced by /pod-info, /origin-info, /whoami.
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: APP_NAME
+              value: nexabank
+            - name: APP_VERSION
+              value: latest
+
           resources:
             requests:
               cpu: 50m

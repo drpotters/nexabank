@@ -58,8 +58,46 @@ kubectl -n nexabank run nexabank-smoke --rm -it --restart=Never --image=curlimag
 	curl -fsS http://nexabank/index.html
 ```
 
+## Workload introspection endpoints
+
+The image exposes three JSON endpoints useful for verifying which pod served a
+request and where the caller came from. Pod/node values are injected via the
+Kubernetes Downward API (see `env:` in `k8s/base/deployment.yaml`); outside
+Kubernetes they render empty but the endpoints still respond.
+
+| Endpoint       | Purpose                                                        |
+| -------------- | -------------------------------------------------------------- |
+| `/pod-info`    | Pod name, namespace, pod IP, node name, hostname, app/version. |
+| `/origin-info` | Caller IP, `X-Forwarded-*` headers, host, scheme, user-agent.  |
+| `/whoami`      | Container identity: hostname, pod, node, app/version.          |
+
+Examples:
+
+```sh
+kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/pod-info | jq
+curl -s http://localhost:8080/origin-info | jq
+curl -s http://localhost:8080/whoami | jq
+```
+
+Sample `/pod-info` response:
+
+```json
+{
+  "pod_name": "nexabank-7c9f8b6d4-abcde",
+  "pod_namespace": "nexabank",
+  "pod_ip": "10.244.1.23",
+  "node_name": "aks-nodepool1-000000-vmss000001",
+  "hostname": "nexabank-7c9f8b6d4-abcde",
+  "app": "nexabank",
+  "version": "latest",
+  "server_time": "2026-07-09T01:23:45+00:00"
+}
+```
+
 ## Notes
 
 - Static content is served by `nginxinc/nginx-unprivileged:1.27-alpine` on container port `8080`.
+- Introspection endpoints are configured in `nginx/templates/default.conf.template`, rendered at startup via the image's `envsubst` templating.
 - Kubernetes base includes: Namespace, Deployment, Service, Ingress, and HorizontalPodAutoscaler.
 - Overlays provide env-specific image tags and replica counts.

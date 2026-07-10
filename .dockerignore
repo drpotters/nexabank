@@ -1,6 +1,8 @@
 .git
 .gitignore
 k8s
+nginx
+!nginx/templates/default.conf.template
 README-k8s.md
 Dockerfile
 *.log
