@@ -10,10 +10,14 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+permissions: {}
+
 jobs:
   validate:
     name: Validate image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
