@@ -60,14 +60,14 @@ spec:
               memory: 256Mi
           livenessProbe:
             httpGet:
-              path: /index.html
+              path: /health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 15
             timeoutSeconds: 2
           readinessProbe:
             httpGet:
-              path: /index.html
+              path: /health
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10

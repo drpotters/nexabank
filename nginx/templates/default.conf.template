@@ -15,6 +15,15 @@ server {
     # These help verify Kubernetes deployments: which pod/node served the
     # request, where the client came from, and the container's identity.
 
+    # /health: liveness/readiness health check for the pod. Returns 200 + JSON
+    # when nginx is serving. Excluded from access logs to reduce probe noise.
+    location = /health {
+        access_log off;
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        return 200 '{"status":"ok","pod_name":"${POD_NAME}","node_name":"${NODE_NAME}","app":"${APP_NAME}","version":"${APP_VERSION}","server_time":"$time_iso8601"}\n';
+    }
+
     # /pod-info: details about the pod/node serving this request.
     location = /pod-info {
         default_type application/json;

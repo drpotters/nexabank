@@ -67,14 +67,19 @@ Kubernetes they render empty but the endpoints still respond.
 
 | Endpoint       | Purpose                                                        |
 | -------------- | -------------------------------------------------------------- |
+| `/health`      | Pod health/status (used by liveness & readiness probes).       |
 | `/pod-info`    | Pod name, namespace, pod IP, node name, hostname, app/version. |
 | `/origin-info` | Caller IP, `X-Forwarded-*` headers, host, scheme, user-agent.  |
 | `/whoami`      | Container identity: hostname, pod, node, app/version.          |
+
+The Kubernetes liveness and readiness probes (and the image `HEALTHCHECK`) hit
+`/health`, which returns HTTP 200 with `{"status":"ok",...}` while nginx is serving.
 
 Examples:
 
 ```sh
 kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/health | jq
 curl -s http://localhost:8080/pod-info | jq
 curl -s http://localhost:8080/origin-info | jq
 curl -s http://localhost:8080/whoami | jq
