@@ -15,8 +15,11 @@ COPY nginx/templates/default.conf.template /etc/nginx/templates/default.conf.tem
 #    /usr/share/nginx/html/README-k8s.md
 
 # App identity metadata (surfaced by /pod-info, /whoami). Override at runtime.
+# APP_VERSION can be set at build time (e.g. from a release tag) and defaults to
+# "dev" for local/untagged builds.
+ARG APP_VERSION=dev
 ENV APP_NAME=nexabank \
-    APP_VERSION=dev
+    APP_VERSION=${APP_VERSION}
 
 # Restrict envsubst to only these variables so nginx's own $vars are preserved.
 ENV NGINX_ENVSUBST_FILTER="POD_NAME|POD_NAMESPACE|POD_IP|NODE_NAME|HOSTNAME|APP_NAME|APP_VERSION"
