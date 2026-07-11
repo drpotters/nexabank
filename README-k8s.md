@@ -60,7 +60,7 @@ kubectl -n nexabank run nexabank-smoke --rm -it --restart=Never --image=curlimag
 
 ## Workload introspection endpoints
 
-The image exposes three JSON endpoints useful for verifying which pod served a
+The image exposes four JSON endpoints useful for verifying which pod served a
 request and where the caller came from. Pod/node values are injected via the
 Kubernetes Downward API (see `env:` in `k8s/base/deployment.yaml`); outside
 Kubernetes they render empty but the endpoints still respond.

@@ -14,6 +14,152 @@ NexaBank is a static-content demo application that simulates a retail banking we
 | `/services.html` | Services catalogue |
 | `/loans/` | Loans hub and product pages |
 
+## Workload introspection endpoints
+
+The image exposes four JSON endpoints useful for verifying which pod served a
+request and where the caller came from. Pod/node values are injected via the
+Kubernetes Downward API (see `env:` in `k8s/base/deployment.yaml`); outside
+Kubernetes they render empty but the endpoints still respond.
+
+| Endpoint       | Purpose                                                        |
+| -------------- | -------------------------------------------------------------- |
+| `/health`      | Pod health/status (used by liveness & readiness probes).       |
+| `/pod-info`    | Pod name, namespace, pod IP, node name, hostname, app/version. |
+| `/origin-info` | Caller IP, `X-Forwarded-*` headers, host, scheme, user-agent.  |
+| `/whoami`      | Container identity: hostname, pod, node, app/version.          |
+
+The Kubernetes liveness and readiness probes (and the image `HEALTHCHECK`) hit
+`/health`, which returns HTTP 200 with `{"status":"ok",...}` while nginx is serving.
+
+Examples:
+
+```sh
+kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/pod-info | jq
+curl -s http://localhost:8080/origin-info | jq
+curl -s http://localhost:8080/whoami | jq
+```
+
+Sample `/pod-info` response:
+
+```json
+{
+  "pod_name": "nexabank-7c9f8b6d4-abcde",
+  "pod_namespace": "nexabank",
+  "pod_ip": "10.244.1.23",
+  "node_name": "aks-nodepool1-000000-vmss000001",
+  "hostname": "nexabank-7c9f8b6d4-abcde",
+  "app": "nexabank",
+  "version": "latest",
+  "server_time": "2026-07-09T01:23:45+00:00"
+}
+```
+The Kubernetes liveness and readiness probes (and the image `HEALTHCHECK`) hit
+`/health`, which returns HTTP 200 with `{"status":"ok",...}` while nginx is serving.
+
+Examples:
+
+```sh
+kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/pod-info | jq
+curl -s http://localhost:8080/origin-info | jq
+curl -s http://localhost:8080/whoami | jq
+```
+
+Sample `/pod-info` response:
+
+```json
+{
+  "pod_name": "nexabank-7c9f8b6d4-abcde",
+  "pod_namespace": "nexabank",
+  "pod_ip": "10.244.1.23",
+  "node_name": "aks-nodepool1-000000-vmss000001",
+  "hostname": "nexabank-7c9f8b6d4-abcde",
+  "app": "nexabank",
+  "version": "latest",
+  "server_time": "2026-07-09T01:23:45+00:00"
+}
+```The Kubernetes liveness and readiness probes (and the image `HEALTHCHECK`) hit
+`/health`, which returns HTTP 200 with `{"status":"ok",...}` while nginx is serving.
+
+Examples:
+
+```sh
+kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/pod-info | jq
+curl -s http://localhost:8080/origin-info | jq
+curl -s http://localhost:8080/whoami | jq
+```
+
+Sample `/pod-info` response:
+
+```json
+{
+  "pod_name": "nexabank-7c9f8b6d4-abcde",
+  "pod_namespace": "nexabank",
+  "pod_ip": "10.244.1.23",
+  "node_name": "aks-nodepool1-000000-vmss000001",
+  "hostname": "nexabank-7c9f8b6d4-abcde",
+  "app": "nexabank",
+  "version": "latest",
+  "server_time": "2026-07-09T01:23:45+00:00"
+}
+```The Kubernetes liveness and readiness probes (and the image `HEALTHCHECK`) hit
+`/health`, which returns HTTP 200 with `{"status":"ok",...}` while nginx is serving.
+
+Examples:
+
+```sh
+kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/pod-info | jq
+curl -s http://localhost:8080/origin-info | jq
+curl -s http://localhost:8080/whoami | jq
+```
+
+Sample `/pod-info` response:
+
+```json
+{
+  "pod_name": "nexabank-7c9f8b6d4-abcde",
+  "pod_namespace": "nexabank",
+  "pod_ip": "10.244.1.23",
+  "node_name": "aks-nodepool1-000000-vmss000001",
+  "hostname": "nexabank-7c9f8b6d4-abcde",
+  "app": "nexabank",
+  "version": "latest",
+  "server_time": "2026-07-09T01:23:45+00:00"
+}
+```The Kubernetes liveness and readiness probes (and the image `HEALTHCHECK`) hit
+`/health`, which returns HTTP 200 with `{"status":"ok",...}` while nginx is serving.
+
+Examples:
+
+```sh
+kubectl -n nexabank port-forward svc/nexabank 8080:80
+curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/pod-info | jq
+curl -s http://localhost:8080/origin-info | jq
+curl -s http://localhost:8080/whoami | jq
+```
+
+Sample `/pod-info` response:
+
+```json
+{
+  "pod_name": "nexabank-7c9f8b6d4-abcde",
+  "pod_namespace": "nexabank",
+  "pod_ip": "10.244.1.23",
+  "node_name": "aks-nodepool1-000000-vmss000001",
+  "hostname": "nexabank-7c9f8b6d4-abcde",
+  "app": "nexabank",
+  "version": "latest",
+  "server_time": "2026-07-09T01:23:45+00:00"
+}
+```
 ## Repository layout
 
 ```
