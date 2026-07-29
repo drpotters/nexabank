@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nexabank
+
+resources:
+  - ../../base
+
+# Sets HOST_PROVIDER=vmware so /origin-info reports host_provider="vmware".
+components:
+  - ../../components/provider-vmware
+
+labels:
+  - includeSelectors: true
+    pairs:
+      environment: vmware
+
+patches:
+  - target:
+      kind: Deployment
+      name: nexabank
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 2
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: nexabank
+    patch: |
+      - op: replace
+        path: /spec/minReplicas
+        value: 2
+      - op: replace
+        path: /spec/maxReplicas
+        value: 6
+
+images:
+  - name: ghcr.io/drpotters/nexabank
+    newTag: latest

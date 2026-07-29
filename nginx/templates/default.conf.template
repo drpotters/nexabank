@@ -31,11 +31,13 @@ server {
         return 200 '{"pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","pod_ip":"${POD_IP}","node_name":"${NODE_NAME}","hostname":"${HOSTNAME}","app":"${APP_NAME}","version":"${APP_VERSION}","server_time":"$time_iso8601"}\n';
     }
 
-    # /origin-info: details about where the request came from.
+    # /origin-info: details about where the request came from, plus which
+    # pod/node/platform served it. Pod values come from the Downward API and
+    # HOST_PROVIDER identifies the underlying platform (aws|gcp|vmware|azure).
     location = /origin-info {
         default_type application/json;
         add_header Cache-Control "no-store" always;
-        return 200 '{"client_ip":"$remote_addr","x_forwarded_for":"$http_x_forwarded_for","x_forwarded_proto":"$http_x_forwarded_proto","x_real_ip":"$http_x_real_ip","host":"$host","scheme":"$scheme","request_method":"$request_method","uri":"$request_uri","user_agent":"$http_user_agent","server_time":"$time_iso8601"}\n';
+        return 200 '{"client_ip":"$remote_addr","x_forwarded_for":"$http_x_forwarded_for","x_forwarded_proto":"$http_x_forwarded_proto","x_real_ip":"$http_x_real_ip","host":"$host","scheme":"$scheme","request_method":"$request_method","uri":"$request_uri","user_agent":"$http_user_agent","pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","pod_ip":"${POD_IP}","node_name":"${NODE_NAME}","host_provider":"${HOST_PROVIDER}","server_time":"$time_iso8601"}\n';
     }
 
     # /whoami: identity of the container/workload answering the request.

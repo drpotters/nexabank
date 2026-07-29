@@ -22,13 +22,16 @@ ENV APP_NAME=nexabank \
     APP_VERSION=${APP_VERSION}
 
 # Restrict envsubst to only these variables so nginx's own $vars are preserved.
-ENV NGINX_ENVSUBST_FILTER="POD_NAME|POD_NAMESPACE|POD_IP|NODE_NAME|HOSTNAME|APP_NAME|APP_VERSION"
+ENV NGINX_ENVSUBST_FILTER="POD_NAME|POD_NAMESPACE|POD_IP|NODE_NAME|HOSTNAME|APP_NAME|APP_VERSION|HOST_PROVIDER"
 
 # Provide safe defaults so the endpoints work even outside Kubernetes.
+# HOST_PROVIDER identifies the underlying platform hosting the pod
+# (e.g. aws, gcp, azure, vmware). Set it per-cluster in the Deployment env.
 ENV POD_NAME="" \
     POD_NAMESPACE="" \
     POD_IP="" \
-    NODE_NAME=""
+    NODE_NAME="" \
+    HOST_PROVIDER="unknown"
 
 EXPOSE 8080
 

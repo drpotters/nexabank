@@ -50,6 +50,10 @@ spec:
               value: nexabank
             - name: APP_VERSION
               value: latest
+            # Platform hosting this pod. Override per cluster in the overlay:
+            # aws (EKS), gcp (GKE), azure (AKS), vmware (Tanzu/vSphere).
+            - name: HOST_PROVIDER
+              value: unknown
 
           resources:
             requests:
