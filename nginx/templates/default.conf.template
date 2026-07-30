@@ -28,7 +28,8 @@ server {
     location = /pod-info {
         default_type application/json;
         add_header Cache-Control "no-store" always;
-        return 200 '{"pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","pod_ip":"${POD_IP}","node_name":"${NODE_NAME}","hostname":"${HOSTNAME}","app":"${APP_NAME}","version":"${APP_VERSION}","server_time":"$time_iso8601"}\n';
+        add_header Host-Provider "${HOST_PROVIDER}" always;
+        return 200 '{"pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","pod_ip":"${POD_IP}","node_name":"${NODE_NAME}","hostname":"${HOSTNAME}","app":"${APP_NAME}","version":"${APP_VERSION}","host_provider":"${HOST_PROVIDER}","server_time":"$time_iso8601"}\n';
     }
 
     # /origin-info: details about where the request came from, plus which
@@ -37,6 +38,7 @@ server {
     location = /origin-info {
         default_type application/json;
         add_header Cache-Control "no-store" always;
+        add_header Host-Provider "${HOST_PROVIDER}" always;
         return 200 '{"client_ip":"$remote_addr","x_forwarded_for":"$http_x_forwarded_for","x_forwarded_proto":"$http_x_forwarded_proto","x_real_ip":"$http_x_real_ip","host":"$host","scheme":"$scheme","request_method":"$request_method","uri":"$request_uri","user_agent":"$http_user_agent","pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","pod_ip":"${POD_IP}","node_name":"${NODE_NAME}","host_provider":"${HOST_PROVIDER}","server_time":"$time_iso8601"}\n';
     }
 
@@ -44,7 +46,8 @@ server {
     location = /whoami {
         default_type application/json;
         add_header Cache-Control "no-store" always;
-        return 200 '{"hostname":"${HOSTNAME}","pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","node_name":"${NODE_NAME}","app":"${APP_NAME}","version":"${APP_VERSION}","served_by":"nginx","server_time":"$time_iso8601"}\n';
+        add_header Host-Provider "${HOST_PROVIDER}" always;
+        return 200 '{"hostname":"${HOSTNAME}","pod_name":"${POD_NAME}","pod_namespace":"${POD_NAMESPACE}","node_name":"${NODE_NAME}","app":"${APP_NAME}","version":"${APP_VERSION}","served_by":"nginx","host_provider":"${HOST_PROVIDER}","server_time":"$time_iso8601"}\n';
     }
 
     # ---- Static site --------------------------------------------------------
