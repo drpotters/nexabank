@@ -1,0 +1,56 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nexabank
+
+resources:
+  - ../../base
+
+# Sets HOST_PROVIDER=k3s so /origin-info reports host_provider="k3s".
+components:
+  - ../../components/provider-k3s
+
+labels:
+  - includeSelectors: true
+    pairs:
+      environment: k3s
+
+patches:
+  - target:
+      kind: Deployment
+      name: nexabank
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 1
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: nexabank
+    patch: |
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+      - op: replace
+        path: /spec/maxReplicas
+        value: 3
+  - target:
+      kind: Service
+      name: nexabank
+    patch: |
+      - op: replace
+        path: /spec/type
+        value: NodePort
+      - op: add
+        path: /spec/ports/0/nodePort
+        value: 31080
+  - patch: |
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: nexabank
+        namespace: nexabank
+
+images:
+  - name: ghcr.io/drpotters/nexabank
+    newTag: latest

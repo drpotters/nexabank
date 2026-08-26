@@ -135,6 +135,7 @@ Ready-made overlays are provided for each platform:
 kubectl apply -k k8s/overlays/eks     # host_provider="aws"
 kubectl apply -k k8s/overlays/gke     # host_provider="gcp"
 kubectl apply -k k8s/overlays/vmware  # host_provider="vmware"
+kubectl apply -k k8s/overlays/k3s     # host_provider="k3s"
 ```
 
 These are thin overlays over `k8s/base` that pull in a reusable Kustomize
