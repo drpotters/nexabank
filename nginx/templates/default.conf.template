@@ -51,11 +51,12 @@ server {
     }
 
     # ---- Static site --------------------------------------------------------
-    location / {
-        try_files $uri $uri/ =404;
-    }
     location ~* \.(js|css|png|jpg|jpeg|gif|svg|woff2?|ttf|ico)$ {
         try_files $uri =404;
         add_header Cache-Control "public, max-age=86400";
     }
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
 }
