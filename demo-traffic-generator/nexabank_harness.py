@@ -25,10 +25,12 @@ a multi-cloud "which pod served me" angle; these are no-store (never cached).
 
 Usage
 -----
-    pip install "requests[socks]" beautifulsoup4
+    pip install requests beautifulsoup4
+    # To use with Tor: pip install "requests[socks]"
     # Tor Browser open (SOCKS 127.0.0.1:9150)
     python3 nexabank_harness.py --crawl-only        # discover pages/assets
-    python3 nexabank_harness.py                      # crawl once, then loop
+    python3 nexabank_harness.py                      # crawl once, then loop (direct)
+    python3 nexabank_harness.py --tor                # crawl once, then loop via Tor
     python3 nexabank_harness.py --skip-crawl --rate 4
     python3 nexabank_harness.py --check-cache        # CDN cache diagnosis
 
@@ -54,7 +56,7 @@ from urllib.parse import urljoin, urlparse
 try:
     import requests
 except ImportError:
-    sys.exit("Missing dependency. Run:  pip install \"requests[socks]\" beautifulsoup4")
+    sys.exit("Missing dependency. Run:  pip install requests  (and \"requests[socks]\" if using Tor)")
 
 try:
     from bs4 import BeautifulSoup
@@ -87,6 +89,7 @@ class Config:
     disallowed_exit_countries: Tuple[str, ...] = ("US",)
 
     # --- Pacing -----------------------------------------------------------
+    use_tor: bool = False                  # if True, use Tor SOCKS proxy
     rate_per_min: Optional[float] = None   # actions/min (jittered +/-40%); via --rate
     min_sleep: float = 20.0
     max_sleep: float = 60.0
@@ -227,8 +230,9 @@ class ShapedSession(requests.Session):
 def build_session(cfg: Config, shaper: Optional[TrafficShaper] = None) -> requests.Session:
     s = ShapedSession()
     s.shaper = shaper
-    proxy = f"socks5h://{cfg.socks_host}:{cfg.socks_port}"
-    s.proxies = {"http": proxy, "https": proxy}
+    if cfg.use_tor:
+        proxy = f"socks5h://{cfg.socks_host}:{cfg.socks_port}"
+        s.proxies = {"http": proxy, "https": proxy}
     s.headers.update({
         "User-Agent": cfg.user_agent,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -482,9 +486,9 @@ def _pick_journey(cfg: Config) -> str:
 
 def run_cycle(cfg: Config, cycle_no: int, shaper: Optional[TrafficShaper] = None) -> None:
     session = build_session(cfg, shaper=shaper)
-    if cfg.new_circuit_each_cycle:
+    if cfg.new_circuit_each_cycle and cfg.use_tor:
         new_circuit(cfg)
-    if cfg.verify_exit_geo:
+    if cfg.verify_exit_geo and cfg.use_tor:
         geo = check_exit_geo(cfg, session)
         if geo:
             flag = " <-- US EXIT, geo rule may NOT trigger!" if geo["country"] in cfg.disallowed_exit_countries else ""
@@ -528,6 +532,7 @@ def _nap(cfg: Config) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="NexaBank demo traffic + discovery harness")
+    ap.add_argument("--tor", action="store_true", help="run with Tor/SOCKS proxy")
     ap.add_argument("--crawl-only", action="store_true", help="discover pages/assets and exit")
     ap.add_argument("--check-cache", action="store_true", help="CDN cache diagnosis, then exit")
     ap.add_argument("--skip-crawl", action="store_true", help="skip discovery, go straight to traffic")
@@ -556,6 +561,8 @@ def main() -> None:
         CONFIG.socks_host = args.socks_host
     if args.socks_port:
         CONFIG.socks_port = args.socks_port
+    if args.tor:
+        CONFIG.use_tor = True
     if args.rate is not None:
         CONFIG.rate_per_min = args.rate
     if args.min_sleep is not None:
@@ -571,16 +578,20 @@ def main() -> None:
     if args.dump_dir:
         CONFIG.dump_dir = args.dump_dir
 
-    pin_exit_countries(CONFIG)
+    if CONFIG.use_tor:
+        pin_exit_countries(CONFIG)
     session = build_session(CONFIG)
-    geo = check_exit_geo(CONFIG, session) if CONFIG.verify_exit_geo else None
-    if geo:
-        log.info("Startup Tor exit: %s (%s) via socks5h://%s:%d",
-                 geo["ip"], geo["country"], CONFIG.socks_host, CONFIG.socks_port)
+    if not CONFIG.use_tor:
+        log.info("Running without proxy (direct requests to %s)", CONFIG.base_url)
     else:
-        log.warning("Could not reach the internet through Tor on %s:%d. Is Tor Browser open? "
-                    "Try --socks-port 9050 for a system tor daemon.",
-                    CONFIG.socks_host, CONFIG.socks_port)
+        geo = check_exit_geo(CONFIG, session) if CONFIG.verify_exit_geo else None
+        if geo:
+            log.info("Startup Tor exit: %s (%s) via socks5h://%s:%d",
+                     geo["ip"], geo["country"], CONFIG.socks_host, CONFIG.socks_port)
+        else:
+            log.warning("Could not reach the internet through Tor on %s:%d. Is Tor Browser open? "
+                        "Try --socks-port 9050 for a system tor daemon.",
+                        CONFIG.socks_host, CONFIG.socks_port)
 
     if args.check_cache:
         check_cache(CONFIG, session)

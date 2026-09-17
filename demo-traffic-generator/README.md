@@ -72,11 +72,14 @@ StrictNodes 1
 ## Run it
 
 ```bash
-pip install "requests[socks]" beautifulsoup4
-# Tor Browser open (SOCKS 127.0.0.1:9150)
+pip install requests beautifulsoup4
+# If using Tor: pip install "requests[socks]"
+
+python3 nexabank_harness.py                  # run directly (no Tor)
+# OR with Tor Browser open (SOCKS 127.0.0.1:9150):
+python3 nexabank_harness.py --tor            # run via Tor
 
 python3 nexabank_harness.py --crawl-only     # discover pages/assets -> nexabank_discovery.json
-python3 nexabank_harness.py                  # crawl once, then loop sessions
 python3 nexabank_harness.py --skip-crawl --rate 4
 python3 nexabank_harness.py --check-cache    # CDN cache diagnosis
 ```
@@ -85,6 +88,7 @@ python3 nexabank_harness.py --check-cache    # CDN cache diagnosis
 
 | Flag | Effect |
 |------|--------|
+| `--tor` | run with Tor/SOCKS proxy |
 | `--crawl-only` / `--skip-crawl` | discover only / skip discovery |
 | `--check-cache` | fetch static assets twice, report cache headers, exit |
 | `--once` | single session then exit |
