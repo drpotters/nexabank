@@ -24,6 +24,40 @@ server {
         return 200 '{"status":"ok","pod_name":"${POD_NAME}","node_name":"${NODE_NAME}","app":"${APP_NAME}","version":"${APP_VERSION}","server_time":"$time_iso8601"}\n';
     }
 
+    # /ready: origin-pool health check endpoint for the F5 XC load balancer.
+    #
+    # Why it's separate from /health:
+    #   /health is used by the Kubernetes liveness and readiness probes and must
+    #   always return 200 while nginx is serving. If it failed:
+    #     - liveness: kubelet restarts the container, which also wipes
+    #       /tmp/unhealthy, so the simulated fault clears itself mid-test.
+    #     - readiness: the pod drops out of the Service EndpointSlice, and F5 XC
+    #       service discovery removes the origin. That tests discovery, not the
+    #       XC health check.
+    #   /ready should be probed only by the F5 XC origin-pool health check
+    #   A failure here leaves the pod Running, Ready and discovered, and only the
+    #   XC health check marks it down, as it would for a real application failure.
+    #
+    # Fault injection (resiliency test T4):
+    #   touch /tmp/unhealthy  -> 503; XC marks the origin unhealthy and stops
+    #                            sending it traffic.
+    #   rm /tmp/unhealthy     -> 200; XC marks it healthy again after the
+    #                            healthy threshold is met.
+    #   /tmp is writable by the unprivileged nginx user (uid 101), so
+    #   `kubectl exec` can toggle it with no extra permissions.
+    #
+    # Note: "if" inside a location is safe here because its only action is
+    # "return" (see nginx's "If is Evil" guidance).
+    location = /ready {
+        access_log off;
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        if (-f /tmp/unhealthy) {
+            return 503 '{"status":"unready","pod_name":"${POD_NAME}"}\n';
+        }
+        return 200 '{"status":"ready","pod_name":"${POD_NAME}"}\n';
+    }
+
     # /pod-info: details about the pod/node serving this request.
     location = /pod-info {
         default_type application/json;
